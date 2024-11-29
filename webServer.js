@@ -1,21 +1,7 @@
 const net = require('net')
+const fs = require('fs')
 
 const PORT = 3000
-
-const helloResponse = `HTTP/1.1 200 OK
-content-length: 152
-
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <title>hello</title>
-    </head>
-    <body>
-        <h1>Hello</h1>
-    </body>
-</html>
-`
 
 net
   // 接続されたら何をするか設定する
@@ -25,10 +11,19 @@ net
 
     // データを受け取ったら何をするかを設定する
     socket.on('data', (data) => {
-      // const httpRequest = data.toString()
-      // const requestLine = httpRequest.split(`\r\n`)[0]
-      // console.log(requestLine)
-      socket.write(helloResponse)
+      const httpRequest = data.toString()
+      const requestLine = httpRequest.split(`\r\n`)[0]
+      console.log(requestLine)
+
+      const path = requestLine.split(' ')[1]
+      console.log(path)
+
+      const fileContent = fs.readFileSync(`.${path}`)
+      const httpResponse = `HTTP/1.1 200 OK
+      content-length: ${fileContent.length}
+      
+      ${fileContent}`
+      socket.write(httpResponse)
     })
 
     // 接続が閉じたら何をするか設定する
