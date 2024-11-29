@@ -2,7 +2,27 @@ const http = require('http')
 
 const PORT = 8080
 
+const tasks = [
+  {
+    title: 'フロントエンドの実装',
+    createdAt: new Date()
+  },
+  {
+    title: 'サーバサイドの実装',
+    createdAt: new Date()
+  }
+]
+
 function getTasksHTML() {
+  const tasksHTMLElement = tasks
+    .map((task) => {
+      return `<tr>
+  <td>${task.title}</td>
+  <td>${task.createdAt}</td>
+</tr>`
+    })
+    .join('')
+
   return `<!DOCTYPE html>
 <html lang="ja">
   <head>
@@ -11,6 +31,7 @@ function getTasksHTML() {
   </head>
   <body>
     <h1>タスク一覧</h1>
+    <a href="/tasks/new.html">タスク登録へ</a>
     <table>
       <thead>
         <tr>
@@ -19,14 +40,7 @@ function getTasksHTML() {
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>フロントエンドの実装</td>
-          <td>2022-06-17 01:23:45</td>
-        </tr>
-        <tr>
-          <td>サーバサイドの実装</td>
-          <td>2022-06-17 01:23:45</td>
-        </tr>
+        ${tasksHTMLElement}
       </tbody>
     </table>
   </body>
