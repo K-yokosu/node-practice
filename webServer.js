@@ -18,7 +18,9 @@ net
       const path = requestLine.split(' ')[1]
       console.log(path)
 
-      const fileContent = fs.readFileSync(`.${path}`)
+      const requestFile = path.endsWith('/') ? path + 'index.html' : path
+
+      const fileContent = fs.readFileSync(`.${requestFile}`)
       const httpResponse = `HTTP/1.1 200 OK
       content-length: ${fileContent.length}
       
