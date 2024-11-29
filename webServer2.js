@@ -32,6 +32,9 @@ http
       })
 
       taskWebAppRequest.on('response', (taskWebAppResponse) => {
+        Object.entries(taskWebAppResponse.headers).forEach((header) => {
+          response.setHeader(header[0], header[1])
+        })
         response.writeHead(taskWebAppResponse.statusCode)
         taskWebAppResponse.on('data', (data) => {
           response.write(data)
