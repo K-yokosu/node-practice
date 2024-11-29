@@ -6,12 +6,12 @@
   </head>
   <body>
     <h1>タスク登録</h1>
-    <form>
+    <form action="/tasks" method="post">
       <label>
         タイトル
-        <input type="text" />
+        <input type="text" name="title" />
       </label>
-      <button>登録</button>
+      <button type="submit">登録</button>
     </form>
   </body>
 </html>

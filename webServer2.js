@@ -11,8 +11,8 @@ http
 
     const requestFile = path.endsWith('/') ? path + 'index.html' : path
 
-    // ファイルが見つからんか、ディレクトリだった場合、404ではなくアプリケーションサーバの方にリクエストする
     if (
+      method !== 'GET' ||
       !fs.existsSync(`.${requestFile}`) ||
       fs.statSync(`.${requestFile}`).isDirectory()
     ) {
@@ -27,6 +27,10 @@ http
         requestOptions
       )
 
+      request.on('data', (data) => {
+        taskWebAppRequest.write(data)
+      })
+
       taskWebAppRequest.on('response', (taskWebAppResponse) => {
         response.writeHead(taskWebAppResponse.statusCode)
         taskWebAppResponse.on('data', (data) => {
@@ -37,7 +41,9 @@ http
         })
       })
 
-      taskWebAppRequest.end()
+      request.on('end', () => {
+        taskWebAppRequest.end()
+      })
       return
     }
 
