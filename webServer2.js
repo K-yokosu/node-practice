@@ -16,6 +16,7 @@ http
       !fs.existsSync(`.${requestFile}`) ||
       fs.statSync(`.${requestFile}`).isDirectory()
     ) {
+      /*
       const requestOptions = {
         method: method,
         path: path,
@@ -47,6 +48,10 @@ http
       request.on('end', () => {
         taskWebAppRequest.end()
       })
+      return
+      */
+      response.writeHead(404)
+      response.end()
       return
     }
 

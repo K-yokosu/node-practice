@@ -3,7 +3,8 @@ const taskTitleInputElement = document.getElementById('task-title-input')
 const taskAddButtonElement = document.getElementById('task-add-button')
 
 async function loadTasks() {
-  const response = await fetch('/api/tasks')
+  // const response = await fetch('/api/tasks')
+  const response = await fetch('http://localhost:8080/api/tasks')
   const responseBody = await response.json()
 
   const tasks = responseBody.tasks
@@ -34,7 +35,8 @@ async function registerTask() {
     title: title
   }
 
-  await fetch('/api/tasks', {
+  // await fetch('/api/tasks', {
+  await fetch('http://localhost:8080/api/tasks', {
     method: 'POST',
     body: JSON.stringify(requestBody)
   })
