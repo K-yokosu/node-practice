@@ -92,6 +92,27 @@ http
       response.write(responseBody)
       response.end()
       return
+    } else if (path === '/api/tasks' && method === 'POST') {
+      let requestBody = ''
+      request.on('data', (data) => {
+        requestBody += data
+      })
+
+      request.on('end', () => {
+        const requestBodyJson = JSON.parse(requestBody)
+
+        const task = {
+          title: requestBodyJson.title,
+          createdAt: new Date()
+        }
+
+        tasks.push(task)
+
+        response.writeHead(201)
+        response.end()
+      })
+
+      return
     }
 
     response.writeHead(404)
