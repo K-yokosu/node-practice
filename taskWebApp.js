@@ -1,6 +1,20 @@
 const http = require('http')
+const uid = require('uid-safe').sync
 
 const PORT = 8080
+
+const sessions = {}
+
+const users = [
+  {
+    id: 1,
+    name: 'alice'
+  },
+  {
+    id: 2,
+    name: 'bob'
+  }
+]
 
 const tasks = [
   {
@@ -127,6 +141,38 @@ http
       response.setHeader('Set-Cookie', 'name=alice')
       response.writeHead(200)
       response.write('set cookie sample')
+      response.end()
+      return
+    } else if (path === '/session-start' && method === 'GET') {
+      // 実際にはここでパスワードによる認証などを行って、ユーザ ID を特定する
+      const userId = 1
+
+      const sessionId = uid(24)
+      sessions[sessionId] = {
+        userId: userId
+      }
+
+      response.setHeader('Set-Cookie', `sid=${sessionId}`)
+      response.writeHead(200)
+      response.write('session started')
+      response.end()
+      return
+    } else if (path === '/me' && method === 'GET') {
+      const cookie = request.headers.cookie
+      // 「sid=abcdef」のような文字列から「abcdef」の部分を取り出す
+      // 本来は Cookie が複数ある場合を想定したり、
+      // sid が存在しない場合のチェックをしたりする必要がある
+      const sessionId = cookie.split('=')[1]
+
+      const session = sessions[sessionId]
+      const userId = session.userId
+
+      const user = users.find((user) => {
+        return user.id === userId
+      })
+
+      response.writeHead(200)
+      response.write(`userId: ${userId}, userName: ${user.name}`)
       response.end()
       return
     }
