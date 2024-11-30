@@ -53,6 +53,9 @@ http
     const method = request.method
     const path = request.url
     console.log(`[request] ${method} ${path}`)
+    Object.entries(request.headers).forEach((header) => {
+      console.log(header)
+    })
 
     if (path === '/tasks' && method === 'GET') {
       response.writeHead(200)
@@ -100,9 +103,16 @@ http
 
       request.on('end', () => {
         const requestBodyJson = JSON.parse(requestBody)
+        const title = requestBodyJson.title
+
+        if (!title || title.length < 1 || 30 < title.length) {
+          response.writeHead(400)
+          response.end()
+          return
+        }
 
         const task = {
-          title: requestBodyJson.title,
+          title: title,
           createdAt: new Date()
         }
 
@@ -112,6 +122,12 @@ http
         response.end()
       })
 
+      return
+    } else if (path === '/set-cookie-sample' && method === 'GET') {
+      response.setHeader('Set-Cookie', 'name=alice')
+      response.writeHead(200)
+      response.write('set cookie sample')
+      response.end()
       return
     }
 

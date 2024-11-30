@@ -12,7 +12,7 @@ net
     // データを受け取ったら何をするかを設定する
     socket.on('data', (data) => {
       const httpRequest = data.toString()
-      const requestLine = httpRequest.split(`\r\n`)[0]
+      const requestLine = httpRequest.split('\r\n')[0]
       console.log(requestLine)
 
       const path = requestLine.split(' ')[1]
@@ -20,18 +20,20 @@ net
 
       const requestFile = path.endsWith('/') ? path + 'index.html' : path
 
-      if(!fs.existsSync(`.${requestFile}`)){
+      if (!fs.existsSync(`.${requestFile}`)) {
         const httpResponse = `HTTP/1.1 404 Not Found
-        content-length: 0`
+content-length: 0
+
+`
         socket.write(httpResponse)
         return
       }
 
       const fileContent = fs.readFileSync(`.${requestFile}`)
       const httpResponse = `HTTP/1.1 200 OK
-      content-length: ${fileContent.length}
-      
-      ${fileContent}`
+content-length: ${fileContent.length}
+
+${fileContent}`
       socket.write(httpResponse)
     })
 
