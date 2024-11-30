@@ -83,6 +83,15 @@ http
       })
 
       return
+    } else if (path === '/api/tasks' && method === 'GET') {
+      response.writeHead(200)
+      const responseBodyJson = {
+        tasks: tasks
+      }
+      const responseBody = JSON.stringify(responseBodyJson)
+      response.write(responseBody)
+      response.end()
+      return
     }
 
     response.writeHead(404)
