@@ -101,6 +101,7 @@ http
 
       return
     } else if (path === '/api/tasks' && method === 'GET') {
+      response.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
       response.writeHead(200)
       const responseBodyJson = {
         tasks: tasks
